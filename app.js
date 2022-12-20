@@ -1,12 +1,13 @@
 // importation des packages necessaires
 const express = require('express');
-
+const path = require('path');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 require('dotenv').config();
 
 // Recuperation dossiers internes
 const userRoutes = require('./routes/user');
+const rateLimit = require('./middleware/rateLimit');
 
 const app = express();
 console.log("je suis le app en cour de lecture");
@@ -18,6 +19,7 @@ mongoose.connect(process.env.DB_URL)
 
 
 app.use(express.json());
+app.use(rateLimit);
 app.use(helmet({crossOriginResourcePolicy : false})); // crossOriginResourcePolicy obliger sinon les images disparaissent 
 
 app.use((req, res, next) => {
