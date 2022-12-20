@@ -10,9 +10,15 @@ API REST avec utilisation du CRUD
 
 
 **Spécification projet :** 
+
+
    <img src="./imgREADME/Capture1.PNG" alt="image spec test">
-< images >
-< images >
+
+
+   <img src="./imgREADME/Capture2.PNG" alt="image spec test">
+
+
+   <img src="./imgREADME/Capture.PNG" alt="image spec test">
 
 
 **Installation du projet :** 
