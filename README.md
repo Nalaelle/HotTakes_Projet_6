@@ -8,6 +8,8 @@ Une application de sauces piquantes dans laquelle l'utilisateur va pouvoir crée
 créer une sauce, la supprimer, la modifier, liker ou disliker les sauces présentes sur l'appli. 
 API REST avec utilisation du CRUD
 
+Cette partie est réalisée avec NodeJs - Express - MongoDB
+
 
 **Spécification projet :** 
 
