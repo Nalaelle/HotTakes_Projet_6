@@ -7,10 +7,12 @@ require('dotenv').config();
 
 // Recuperation dossiers internes
 const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces');
 const rateLimit = require('./middleware/rateLimit');
 
 const app = express();
 console.log("je suis le app en cour de lecture");
+console.log("----------------------------------");
 
 // connexion à la base de données
 mongoose.connect(process.env.DB_URL)
@@ -30,5 +32,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', saucesRoutes);
+app.use('/images', express.static(path.join(__dirname, '/images')));
 
 module.exports = app;

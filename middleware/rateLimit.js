@@ -6,6 +6,5 @@ const limiter = rateLimit({
     max: 2000,
     message: "Too many request from this IP, try later !"
 });
-console.log("limiter request test ");
 
 module.exports = limiter;
