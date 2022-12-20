@@ -1,12 +1,17 @@
+// importation des packages necessaires
 const express = require('express');
 
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 require('dotenv').config();
 
+// Recuperation dossiers internes
+const userRoutes = require('./routes/user');
+
 const app = express();
 console.log("je suis le app en cour de lecture");
 
+// connexion à la base de données
 mongoose.connect(process.env.DB_URL)
     .then(() => console.log('connexion à MongoDB réussie !'))
     .catch((err) => console.log(err, 'Connexion à MongoDB échouée !'));
@@ -21,5 +26,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATH, OPTIONS');
     next();
 });
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
