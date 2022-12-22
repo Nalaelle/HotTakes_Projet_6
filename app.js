@@ -1,7 +1,7 @@
 // importation des packages necessaires
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const path = require('path');
 const helmet = require('helmet');
 require('dotenv').config();
 
@@ -15,6 +15,7 @@ console.log("je suis le app en cour de lecture");
 console.log("----------------------------------");
 
 // connexion à la base de données
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.DB_URL)
     .then(() => console.log('connexion à MongoDB réussie !'))
     .catch((err) => console.log(err, 'Connexion à MongoDB échouée !'));

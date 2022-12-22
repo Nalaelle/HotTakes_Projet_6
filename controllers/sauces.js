@@ -10,6 +10,7 @@ exports.getAllSauces = (req, res, next) => {
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
+
     delete sauceObject.userId;
     const sauce = new Sauce ({
         ...sauceObject,
@@ -42,12 +43,17 @@ exports.modifySauce = (req, res, next) => {
             if (sauce.userId !== req.auth.userId) {
                 res.status(403).json({ message: 'Non autorisé' })
             } else {
-                const filename = sauce.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, (error) => {
-                    if(error){
-                        throw error;
-                    }
-                })
+                if (req.file){
+                    const filename = sauce.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, (error) => {
+                        if(error){
+                            console.log("error modifier ");
+                            console.log(error);
+                            throw error;
+                        }
+                    })
+                }
+                
                 Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
                     .then(() => {
                         res.status(200).json({ message: 'Objet modifier avec succès' })
@@ -67,7 +73,8 @@ exports.deleteSauce = (req, res, next) => {
                 const filename = sauce.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, (error) => {
                     if (error){
-                        console.log(e);
+                        console.log("error delete ");
+                        console.log(error);
                         throw error;
                     }else{
                     sauce.deleteOne({ _id: req.params.id })

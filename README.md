@@ -33,4 +33,4 @@ Cloner ce repo back
 créer un fichier .env à la racine du dossier back comme dans le fichier .env.example avec vos identifiant de connexion à MongoDB
 --> utiliser les commandes suivantes dans un nouveau terminal de commande
 
-`cd back`  `npm install`  `node --watch server.js`
+`cd back`  `npm install`  `node --watch server.js` // Cette dernière commande remplace nodemon
