@@ -1,6 +1,11 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
+function validName(name){
+    const regex = /^[^@&"<>!_$€`+=\/;?#]+$/;
+    return regex.test(name)
+}
+
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then(sauce => res.status(200).json(sauce))
@@ -10,18 +15,27 @@ exports.getAllSauces = (req, res, next) => {
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
+    
+    if (validName(sauceObject.name)) {
+        delete sauceObject.userId;
+        const sauce = new Sauce ({
+            ...sauceObject,
+            userId: req.auth.userId,
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        });
 
-    delete sauceObject.userId;
-    const sauce = new Sauce ({
-        ...sauceObject,
-        userId: req.auth.userId,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    });
+        sauce
+            .save()
+            .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
+            .catch(error => res.status(400).json({ error }))
 
-    sauce
-        .save()
-        .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-        .catch(error => res.status(400).json({ error }))
+    }else{
+        console.log('il y a une erreur !')
+        return res.status(400).json({ message: "erreur de saisie" })
+       
+    }
+
+    
     
 };
 
@@ -37,31 +51,37 @@ exports.modifySauce = (req, res, next) => {
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
 
-    delete sauceObject.userId;
-    Sauce.findOne({ _id: req.params.id })
-        .then((sauce) => {
-            if (sauce.userId !== req.auth.userId) {
-                res.status(403).json({ message: 'Non autorisé' })
-            } else {
-                if (req.file){
-                    const filename = sauce.imageUrl.split('/images/')[1];
-                    fs.unlink(`images/${filename}`, (error) => {
-                        if(error){
-                            console.log("error modifier ");
-                            console.log(error);
-                            throw error;
-                        }
-                    })
-                }
-                
-                Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-                    .then(() => {
-                        res.status(200).json({ message: 'Objet modifier avec succès' })
-                    })
-                    .catch(error => res.status(500).json({ error }));
-                }
-        })
-        .catch(error => res.status(500).json({ error }))
+    if (validName(sauceObject.name)){
+        delete sauceObject.userId;
+        Sauce.findOne({ _id: req.params.id })
+            .then((sauce) => {
+                if (sauce.userId !== req.auth.userId) {
+                    res.status(403).json({ message: 'Non autorisé' })
+                } else {
+                    if (req.file){
+                        const filename = sauce.imageUrl.split('/images/')[1];
+                        fs.unlink(`images/${filename}`, (error) => {
+                            if(error){
+                                console.log("error modifier ");
+                                console.log(error);
+                                throw error;
+                            }
+                        })
+                    }
+                    
+                    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                        .then(() => {
+                            res.status(200).json({ message: 'Objet modifier avec succès' })
+                        })
+                        .catch(error => res.status(500).json({ error }));
+                    }
+            })
+            .catch(error => res.status(500).json({ error }))
+
+    }else{
+        console.log('il y a une erreur !')
+        return res.status(400).json({ message: "erreur de saisie" })
+    }
 };
 
 exports.deleteSauce = (req, res, next) => {
