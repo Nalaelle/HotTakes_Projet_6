@@ -34,3 +34,7 @@ créer un fichier .env à la racine du dossier back comme dans le fichier .env.e
 --> utiliser les commandes suivantes dans un nouveau terminal de commande
 
 `cd back`  `npm install`  `node --watch server.js` // Cette dernière commande remplace nodemon
+
+
+Il faut ajouter un dossier "images" à la racine.
+Aussi la version de node utilisée est la 18.12.1
